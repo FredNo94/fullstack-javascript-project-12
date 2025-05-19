@@ -17,7 +17,8 @@
   "scripts": {
     "test": "make test",
     "server": "@hexlet/chat-server",
-    "start": "make start"
+    "start": "make start",
+    "build": "make build"
   },
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
