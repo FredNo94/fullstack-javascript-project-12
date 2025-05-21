@@ -17,14 +17,17 @@
   "scripts": {
     "test": "make test",
     "server": "@hexlet/chat-server",
-    "start": "make start",
+    "start": "serve -s ./frontend/dist -l 10000",
     "build": "make build"
   },
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.4",
-    "eslint": "^8.57.1"
+    "@hexlet/chat-server": "^2.0.4"
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^5.2.0"
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "serve": "^14.2.4"
   }
 }
