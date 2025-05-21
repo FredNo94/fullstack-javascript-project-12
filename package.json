@@ -17,7 +17,7 @@
   "scripts": {
     "test": "make test",
     "server": "@hexlet/chat-server",
-    "start": "serve -s ./frontend/dist -l 10000",
+    "start": "npx serve -s ./frontend/dist -l 10000",
     "build": "make build"
   },
   "dependencies": {
