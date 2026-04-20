@@ -1,46 +1,29 @@
-import js from "@eslint/js";
-import globals from "globals";
-import pluginReact from "eslint-plugin-react";
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default [
-  js.configs.recommended,
+export default defineConfig([
+  globalIgnores(['dist']),
   {
-    ignores: ["dist/**/*.js", "node_modules/**"]
-  },
-  {
-    files: ["**/*.{js,jsx}"],
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        process: "readonly",
-        __REACT_DEVTOOLS_GLOBAL_HOOK__: "readonly",
-        setImmediate: "readonly"
-      },
+      ecmaVersion: 2020,
+      globals: globals.browser,
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        }
-      }
-    }
-  },
-  {
-    plugins: {
-      react: pluginReact
-    },
-    settings: {
-      react: {
-        version: "detect"
-      }
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
     },
     rules: {
-      "react/react-in-jsx-scope": "off",
-      "no-undef": "warn",
-      "no-unreachable": "warn",
-      "no-empty": "warn",
-      "no-cond-assign": "warn",
-      "no-prototype-builtins": "off",
-      "no-control-regex": "off"
-    }
-  }
-];
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+])

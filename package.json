@@ -18,7 +18,8 @@
     "test": "make test",
     "server": "@hexlet/chat-server",
     "start": "npx serve -s ./frontend/dist -l 10000",
-    "build": "make build"
+    "build": "make build",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4",
