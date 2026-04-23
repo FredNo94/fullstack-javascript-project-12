@@ -2,7 +2,7 @@ build:
 	cd frontend && npm install && npm run build
 
 start:
-	npx start-server -s ./frontend/dist
+	cd frontend && npx serve -s dist
 
 lint:
 	cd frontend && npm run lint
