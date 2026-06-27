@@ -2,7 +2,7 @@ build:
 	cd frontend && npm install && npm run build
 
 start:
-	cd frontend && npx serve -s dist
+	node ./node_modules/@hexlet/chat-server/bin/index.js -s ./frontend/dist
 
 lint:
 	cd frontend && npm run lint
