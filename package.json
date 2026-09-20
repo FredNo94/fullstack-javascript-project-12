@@ -1,34 +1,51 @@
 {
-  "name": "@hexlet/code",
-  "version": "1.0.0",
-  "description": "Copy slack chat",
-  "homepage": "https://github.com/FredNo94/fullstack-javascript-project-12#readme",
-  "bugs": {
-    "url": "https://github.com/FredNo94/fullstack-javascript-project-12/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FredNo94/fullstack-javascript-project-12.git"
-  },
-  "license": "ISC",
-  "author": "AGalenkov",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "test": "make test",
-    "server": "@hexlet/chat-server",
-    "start": "start-server -s ./frontend/dist",
-    "build": "make build",
-    "lint": "eslint ."
-  },
-  "dependencies": {
-    "@hexlet/chat-server": "^2.0.4",
-    "serve": "^14.2.4"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.27.0",
-    "eslint": "^9.27.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0"
-  }
+    "name": "@hexlet/code",
+    "version": "1.0.0",
+    "description": "Copy slack chat",
+    "homepage": "https://github.com/FredNo94/fullstack-javascript-project-12#readme",
+    "bugs": {
+        "url": "https://github.com/FredNo94/fullstack-javascript-project-12/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FredNo94/fullstack-javascript-project-12.git"
+    },
+    "license": "ISC",
+    "author": "AGalenkov",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "start": "start-server -s ./dist",
+        "server": "start-server",
+        "lint": "eslint .",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@hexlet/chat-server": "^2.0.4",
+        "@reduxjs/toolkit": "^2.12.0",
+        "@sentry/react": "^10.75.0",
+        "axios": "^1.16.1",
+        "bootstrap": "^5.3.8",
+        "formik": "^2.4.9",
+        "react": "^19.2.5",
+        "react-bootstrap": "^2.10.10",
+        "react-dom": "^19.2.5",
+        "react-redux": "^9.3.0",
+        "react-router-dom": "^7.14.1",
+        "socket.io-client": "^4.8.3",
+        "yup": "^1.7.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.4",
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^6.0.1",
+        "eslint": "^9.39.4",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-react-refresh": "^0.5.2",
+        "globals": "^17.5.0",
+        "sass": "^1.101.0",
+        "vite": "^8.0.9"
+    }
 }

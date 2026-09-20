@@ -1,8 +1,16 @@
-build:
-	npm install && cd frontend && npm install && npm run build
+.PHONY: install build start dev lint
+
+install:
+	npm ci
+
+build: install
+	npm run build
 
 start:
-	npx start-server -s ./frontend/dist
+	npm start
+
+dev:
+	npm run dev
 
 lint:
-	cd frontend && npm run lint
+	npm run lint
