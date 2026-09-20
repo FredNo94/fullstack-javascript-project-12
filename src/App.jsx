@@ -1,20 +1,18 @@
-import './App.css';
+import { Anchor, Box, Group } from '@mantine/core';
 import { Link, Outlet } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="d-flex flex-column h-100">
-      <header className="shadow-sm bg-white">
-        <div className="container py-3">
-          <Link to="/" className="text-decoration-none fw-bold">
+    <Box mih="100dvh">
+      <Group component="header" h={72} px="xl" bg="white">
+          <Anchor component={Link} to="/" fw={700}>
             Hexlet Chat
-          </Link>
-        </div>
-      </header>
-      <main className="flex-grow-1 overflow-hidden">
+          </Anchor>
+      </Group>
+      <Box component="main">
         <Outlet />
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

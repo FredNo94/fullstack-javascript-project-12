@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const getChannels = async (token) => {
+const getChannels = async (token, signal) => {
   const response = await axios.get('/api/v1/channels', {
+    signal,
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -9,8 +10,9 @@ const getChannels = async (token) => {
   return response.data;
 };
 
-const getMessages = async (token) => {
+const getMessages = async (token, signal) => {
   const response = await axios.get('/api/v1/messages', {
+    signal,
     headers: {
       Authorization: `Bearer ${token}`,
     },

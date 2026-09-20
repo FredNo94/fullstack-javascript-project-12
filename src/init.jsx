@@ -1,19 +1,17 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
-import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
 import '@mantine/core/styles.css';
 import App from './App.jsx';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import store from './store';
 import SocketContext from './contexts/SocketContext.js';
 
 const init = async (socket) => {
+  const queryClient = new QueryClient();
   const router = createBrowserRouter([
     {
       path: '/',
@@ -34,11 +32,11 @@ const init = async (socket) => {
   return (
     <React.StrictMode>
       <SocketContext.Provider value={socket}>
-        <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
           <MantineProvider forceColorScheme="light">
             <RouterProvider router={router} />
           </MantineProvider>
-        </Provider>
+        </QueryClientProvider>
       </SocketContext.Provider>
     </React.StrictMode>
   );

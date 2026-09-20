@@ -1,9 +1,10 @@
 ﻿import { useState } from 'react';
-import { Alert, Button, Paper, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
+import { Alert, Button, Center, Image, Paper, PasswordInput, SimpleGrid, Stack, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../authStore';
 import authService from '../services/authService';
+import avatarImg from '../assets/avatar.jpg';
 
 export default function LoginForm() {
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -39,7 +40,11 @@ export default function LoginForm() {
   };
 
   return (
-    <Paper withBorder shadow="sm" radius="md" p="xl" w="100%" maw={440}>
+    <Paper withBorder shadow="sm" radius="md" p="xl" w="100%" maw={800}>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xl">
+        <Center>
+          <Image src={avatarImg} alt="" w={200} maw="100%" radius="50%" />
+        </Center>
       <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
         <Stack>
           <Title order={1} size="h2" ta="center">Войти</Title>
@@ -62,6 +67,7 @@ export default function LoginForm() {
           <Button type="submit" loading={isSubmitting} fullWidth>Войти</Button>
         </Stack>
       </form>
+      </SimpleGrid>
     </Paper>
   );
 }

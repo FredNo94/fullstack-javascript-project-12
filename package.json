@@ -26,13 +26,11 @@
         "@mantine/core": "^9.6.1",
         "@mantine/form": "^9.6.1",
         "@mantine/hooks": "^9.6.1",
-        "@reduxjs/toolkit": "^2.12.0",
         "@sentry/react": "^10.75.0",
+        "@tanstack/react-query": "^5.103.1",
         "axios": "^1.16.1",
-        "bootstrap": "^5.3.8",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
-        "react-redux": "^9.3.0",
         "react-router-dom": "^7.14.1",
         "socket.io-client": "^4.8.3",
         "zustand": "^5.0.15"
@@ -46,7 +44,6 @@
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-react-refresh": "^0.5.2",
         "globals": "^17.5.0",
-        "sass": "^1.101.0",
         "vite": "^8.0.9"
     }
 }
