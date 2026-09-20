@@ -1,13 +1,12 @@
 ﻿import { useState } from 'react';
 import { Alert, Button, Paper, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setAuth } from '../slices/authSlice';
+import useAuthStore from '../authStore';
 import authService from '../services/authService';
 
 export default function LoginForm() {
-  const dispatch = useDispatch();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
   const [authError, setAuthError] = useState(null);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -24,8 +23,8 @@ export default function LoginForm() {
     setSubmitting(true);
     try {
       const { token, username } = await authService.login(values);
-      dispatch(setAuth({ token, username }));
-      navigate('/');
+      setAuth({ token, username });
+      navigate('/', { replace: true });
     } catch (error) {
       if (!error.response) {
         setAuthError('Не удалось подключиться к серверу. Попробуйте ещё раз.');

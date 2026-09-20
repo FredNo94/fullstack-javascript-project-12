@@ -1,10 +1,11 @@
+import useAuthStore from '../authStore';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import chatService from '../services/chatService';
 
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
-  async (_, { getState }) => {
-    const { auth: { token } } = getState();
+  async () => {
+    const { token } = useAuthStore.getState();
     const channels = await chatService.getChannels(token);
     return channels;
   },

@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom';
 import { Center } from '@mantine/core';
-import { useSelector } from 'react-redux';
+
 import LoginForm from '../components/LoginForm';
-import { selectIsAuthenticated } from '../slices/authSlice';
+import useAuthStore, { selectIsAuthenticated } from '../authStore';
 
 export default function LoginPage() {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
