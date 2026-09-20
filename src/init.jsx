@@ -1,8 +1,10 @@
 import React from 'react';
+import { MantineProvider } from '@mantine/core';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import '@mantine/core/styles.css';
 import App from './App.jsx';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -33,7 +35,9 @@ const init = async (socket) => {
     <React.StrictMode>
       <SocketContext.Provider value={socket}>
         <Provider store={store}>
-          <RouterProvider router={router} />
+          <MantineProvider forceColorScheme="light">
+            <RouterProvider router={router} />
+          </MantineProvider>
         </Provider>
       </SocketContext.Provider>
     </React.StrictMode>

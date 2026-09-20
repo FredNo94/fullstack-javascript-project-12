@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
+import { Anchor, Stack, Title } from '@mantine/core';
 
 export default function NotFoundPage() {
   return (
-    <div>
-      <h1>404 - Страница не найдена</h1>
-      <Link to="/">Вернуться на главную</Link>
-    </div>
+    <Stack align="center" p="xl">
+      <Title order={1}>404 — Страница не найдена</Title>
+      <Anchor component={Link} to="/">Вернуться на главную</Anchor>
+    </Stack>
   );
 }
