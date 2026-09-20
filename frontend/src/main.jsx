@@ -1,3 +1,5 @@
+import './monitoring.js';
+import { reactErrorHandler } from '@sentry/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -30,7 +32,11 @@ const router = createBrowserRouter([
 
 const rootElement = document.getElementById('root');
 
-ReactDOM.createRoot(rootElement).render(
+ReactDOM.createRoot(rootElement, {
+  onUncaughtError: reactErrorHandler(),
+  onCaughtError: reactErrorHandler(),
+  onRecoverableError: reactErrorHandler(),
+}).render(
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
