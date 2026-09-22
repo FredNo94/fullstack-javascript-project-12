@@ -59,10 +59,12 @@ export default function LoginForm() {
             name="username"
             autoComplete="username"
             required
+            withAsterisk={false}
             {...form.getInputProps('username')}
           />
           <PasswordInput
             label={t('auth.password')}
+            withAsterisk={false}
             name="password"
             autoComplete="current-password"
             visibilityToggleButtonProps={{ 'aria-label': t('auth.togglePassword') }}

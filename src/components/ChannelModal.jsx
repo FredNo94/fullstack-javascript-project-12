@@ -79,6 +79,7 @@ export default function ChannelModal({ modal, channels }) {
           {error && <Alert color="red" role="alert">{error}</Alert>}
           {deleting ? <Text>{t('channels.confirmDelete', { name: channel?.name })}</Text> : (
             <TextInput label={t('channels.name')} data-autofocus required
+              withAsterisk={false}
               readOnly={mutation.isPending} {...form.getInputProps('name')}
               onFocus={(event) => event.currentTarget.select()} />
           )}

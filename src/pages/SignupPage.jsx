@@ -52,11 +52,14 @@ export default function SignupPage() {
             <Title order={1} size="h2" ta="center">{t('auth.signup')}</Title>
             {error && <Alert color="red" role="alert">{error}</Alert>}
             <TextInput label={t('auth.username')} name="username" autoComplete="username" autoFocus required
+              withAsterisk={false}
               readOnly={pending} {...form.getInputProps('username')} />
             <PasswordInput label={t('auth.password')} name="password" autoComplete="new-password" required
+              withAsterisk={false}
               readOnly={pending} {...form.getInputProps('password')}
               visibilityToggleButtonProps={{ 'aria-label': t('auth.togglePassword') }} />
             <PasswordInput label={t('auth.confirmPassword')} name="confirmPassword" autoComplete="new-password" required
+              withAsterisk={false}
               readOnly={pending} {...form.getInputProps('confirmPassword')}
               visibilityToggleButtonProps={{ 'aria-label': t('auth.toggleConfirmPassword') }} />
             <Button type="submit" loading={pending}>{t('auth.register')}</Button>
