@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
-import { Alert, Button, Group, Stack, TextInput } from '@mantine/core';
+import { ActionIcon, Alert, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAuthStore from '../authStore';
@@ -50,10 +50,9 @@ export default function MessageForm({ channelId }) {
             {t('messages.sendError')}
           </Alert>
         )}
-        <Group wrap="nowrap">
           <TextInput
             ref={input}
-            flex={1}
+            size="md"
             miw={0}
             aria-label={t('messages.new')}
             placeholder={t('messages.placeholder')}
@@ -61,11 +60,19 @@ export default function MessageForm({ channelId }) {
             disabled={!channelId}
             autoComplete="off"
             {...form.getInputProps('body')}
+            rightSectionWidth={44}
+            rightSectionPointerEvents="auto"
+            rightSection={(
+          <ActionIcon type="submit" size={32} radius="md" color="blue"
+            aria-label={t('messages.send')} title={t('messages.send')}
+            loading={mutation.isPending} disabled={!channelId || !form.values.body.trim()}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6" />
+            </svg>
+          </ActionIcon>
+            )}
           />
-          <Button type="submit" loading={mutation.isPending} disabled={!channelId || !form.values.body.trim()}>
-            {t('messages.send')}
-          </Button>
-        </Group>
       </Stack>
     </form>
   );

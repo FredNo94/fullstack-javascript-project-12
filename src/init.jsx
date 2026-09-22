@@ -60,7 +60,7 @@ const init = async (socket) => {
         <QueryClientProvider client={queryClient}>
           <MantineProvider forceColorScheme="light">
             <SessionLifecycle />
-            <Notifications store={stores.toasts} position="top-right" limit={3} zIndex={1100} />
+            <Notifications store={stores.toasts} position="bottom-right" limit={3} zIndex={1100} />
             <NetworkNotifications />
             <RouterProvider router={router} />
           </MantineProvider>

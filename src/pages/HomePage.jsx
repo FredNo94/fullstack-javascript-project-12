@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ActionIcon, Alert, Button, Center, Menu, Group, Loader, Paper, ScrollArea, Stack, Text, Title } from '@mantine/core';
 import useAuthStore from '../authStore';
@@ -11,13 +11,14 @@ import MessageForm from '../components/MessageForm';
 import { subscribeToMessages } from '../messageEvents';
 import { subscribeToChannels } from '../channelEvents';
 import ChannelModal from '../components/ChannelModal';
+import ChannelHeader from '../components/ChannelHeader';
+import MessageList from '../components/MessageList';
 
 export default function HomePage() {
   const { t } = useTranslation();
   const socket = useContext(SocketContext);
   const client = useQueryClient();
   const [connected, setConnected] = useState(() => Boolean(socket?.connected));
-  const viewport = useRef(null);
   const token = useAuthStore((state) => state.token);
   const removeAuth = useAuthStore((state) => state.removeAuth);
   const currentChannelId = useUiStore((state) => state.currentChannelId);
@@ -47,10 +48,6 @@ export default function HomePage() {
     return () => { stopMessages(); stopChannels(); };
   }, [socket, client, token]);
 
-  useEffect(() => {
-    if (viewport.current) viewport.current.scrollTop = viewport.current.scrollHeight;
-  }, [messages.data, currentChannel?.id]);
-
   if ((channels.isError && !channels.data) || (messages.isError && !messages.data)) {
     return (
       <Alert color="red" title={t('chat.loadError')} role="alert" m="md">
@@ -71,10 +68,11 @@ export default function HomePage() {
     : [];
 
   return (
-    <><Group align="stretch" gap="md" wrap="nowrap" p="md" h="calc(100dvh - 72px)">
-      <Paper component="aside" withBorder p="sm" w={{ base: 130, sm: 240 }} flex="0 0 auto">
+    <><Group align="stretch" gap={0} wrap="nowrap" p="md" h="calc(100dvh - 72px)">
+      <Paper component="aside" withBorder radius="md" p="sm" w={{ base: 130, sm: 240 }} flex="0 0 auto"
+        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}>
         <Stack h="100%">
-          <Group justify="space-between"><Title order={2} size="h4">{t('channels.title')}</Title><ActionIcon aria-label="+" title={t('channels.addTitle')} onClick={() => openModal('create')}>+</ActionIcon></Group>
+          <Group justify="space-between"><Title order={2} size="h4">{t('channels.title')}</Title><ActionIcon variant="outline" color="blue" radius="md" size={32} aria-label="+" title={t('channels.addTitle')} onClick={() => openModal('create')}>+</ActionIcon></Group>
           <ScrollArea flex={1} type="auto" scrollbars="y">
             <Stack gap="xs">
               {channels.data.map((channel) => (
@@ -101,22 +99,18 @@ export default function HomePage() {
           </ScrollArea>
         </Stack>
       </Paper>
-      <Stack flex={1} miw={0}>
-        <Title order={2} size="h4" lineClamp={1}>{currentChannel ? t('channels.label', { name: currentChannel.name }) : t('channels.notSelected')}</Title>
+      <Paper withBorder radius="md" ml={-1} flex={1} miw={0} mih={0}
+        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+      <Stack h="100%" gap={0}>
+        <ChannelHeader channel={currentChannel} messageCount={visibleMessages.length} />
+        <Stack component="section" aria-label={t('messages.title')} flex={1} mih={0} p="md" gap="md">
         {!connected && <Alert color="yellow" role="status">{t('chat.disconnected')}</Alert>}
         {messages.isError && <Alert color="red" role="alert">{t('messages.refreshError')} <Button variant="subtle" onClick={() => { void messages.refetch(); }}>{t('common.retry')}</Button></Alert>}
-        <ScrollArea flex={1} mih={0} scrollbars="y" viewportRef={viewport} aria-label={t('messages.title')}>
-          <Stack gap="xs">
-            {visibleMessages.map((message) => (
-              <Text key={message.id} style={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
-                <Text span fw={700}>{message.username}</Text>: {message.body}
-              </Text>
-            ))}
-            {visibleMessages.length === 0 && <Text c="dimmed">{t('messages.empty')}</Text>}
-          </Stack>
-        </ScrollArea>
+        <MessageList messages={visibleMessages} channelId={currentChannel?.id} />
         <MessageForm key={token} channelId={currentChannel?.id} />
+        </Stack>
       </Stack>
+      </Paper>
     </Group>
     {modal && <ChannelModal key={`${modal.type}-${modal.channelId}`} modal={modal} channels={channels.data} />}
     </>
