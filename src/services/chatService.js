@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { cleanText, cleanChannelName } from '../profanity.js';
 
 const getChannels = async (token, signal) => {
   const response = await axios.get('/api/v1/channels', {
@@ -8,7 +9,7 @@ const getChannels = async (token, signal) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response.data.map((channel) => ({ ...channel, name: cleanText(channel.name) }));
 };
 
 const getMessages = async (token, signal) => {
@@ -19,11 +20,11 @@ const getMessages = async (token, signal) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response.data.map((message) => ({ ...message, body: cleanText(message.body) }));
 };
 
 const sendMessage = async (token, message) => {
-  const response = await axios.post('/api/v1/messages', message, {
+  const response = await axios.post('/api/v1/messages', { ...message, body: cleanText(message.body) }, {
     timeout: 15000,
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -34,7 +35,7 @@ const changeChannel = async (token, method, id, name) => {
   const response = await axios({
     method,
     url: id == null ? '/api/v1/channels' : `/api/v1/channels/${encodeURIComponent(id)}`,
-    data: name === undefined ? undefined : { name },
+    data: name === undefined ? undefined : { name: cleanChannelName(name) },
     timeout: 15000,
     headers: { Authorization: `Bearer ${token}` },
   });
