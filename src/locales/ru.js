@@ -1,5 +1,14 @@
 export default {
   "translation": {
+    "notifications": {
+      "networkError": "Ошибка соединения. Проверьте подключение к сети.",
+      "loadError": "Не удалось загрузить данные. Попробуйте ещё раз.",
+      "channel": {
+        "create": "Канал создан",
+        "rename": "Канал переименован",
+        "remove": "Канал удалён"
+      }
+    },
     "app": {
       "name": "Hexlet Chat"
     },

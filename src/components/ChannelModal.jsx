@@ -9,6 +9,7 @@ import chatService from '../services/chatService';
 import { validateChannelName } from '../channelValidation';
 import { refreshChannels } from '../channelEvents';
 import { refreshMessages } from '../messageEvents';
+import { showChannelSuccess } from '../toasts';
 
 export default function ChannelModal({ modal, channels }) {
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ export default function ChannelModal({ modal, channels }) {
     setError(null);
     try {
       const result = await mutation.mutateAsync({ name: name.trim() });
+      showChannelSuccess(modal.type, t);
       await client.cancelQueries({ queryKey: ['channels', token], exact: true });
       client.setQueryData(['channels', token], (old = []) => deleting
         ? old.filter((item) => item.id !== result.id)

@@ -6,6 +6,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import useAuthStore, { selectIsAuthenticated } from '../authStore';
 import authService from '../services/authService';
 import { signupValidation } from '../signupValidation';
+import { showNetworkError } from '../toasts';
 
 export default function SignupPage() {
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ export default function SignupPage() {
       setAuth(auth);
       navigate('/', { replace: true });
     } catch (reason) {
+      if (!reason.response) showNetworkError(t);
       if (reason.response?.status === 409) {
         form.setFieldError('username', t('auth.userExists'));
         form.getInputNode('username')?.focus();

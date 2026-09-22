@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../authStore';
 import authService from '../services/authService';
 import avatarImg from '../assets/avatar.jpg';
+import { showNetworkError } from '../toasts';
 
 export default function LoginForm() {
   const { t } = useTranslation();
@@ -30,6 +31,7 @@ export default function LoginForm() {
       navigate('/', { replace: true });
     } catch (error) {
       if (!error.response) {
+        showNetworkError(t);
         setAuthError(t('auth.networkError'));
       } else if (error.response.status === 401) {
         setAuthError(t('auth.invalidCredentials'));
