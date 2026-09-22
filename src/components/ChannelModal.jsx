@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
 import { Alert, Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -10,6 +11,7 @@ import { refreshChannels } from '../channelEvents';
 import { refreshMessages } from '../messageEvents';
 
 export default function ChannelModal({ modal, channels }) {
+  const { t } = useTranslation();
   const token = useAuthStore((state) => state.token);
   const close = useUiStore((state) => state.closeModal);
   const selectChannel = useUiStore((state) => state.setCurrentChannel);
@@ -22,17 +24,17 @@ export default function ChannelModal({ modal, channels }) {
   const [error, setError] = useState(null);
   const form = useForm({
     initialValues: { name: channel?.name ?? '' },
-    validate: { name: (name) => deleting ? null : validateChannelName(name, channels, modal.channelId) },
+    validate: { name: (name) => deleting ? null : validateChannelName(name, channels, modal.channelId, t) },
   });
   const mutation = useMutation({
     retry: false,
     networkMode: 'always',
     mutationFn: async ({ name }) => {
-      if (unavailable) throw new Error('Канал недоступен');
+      if (unavailable) throw new Error(t('channels.unavailable'));
       if (deleting) return chatService.removeChannel(token, channel.id);
 
       const latest = await chatService.getChannels(token);
-      const validation = validateChannelName(name, latest, modal.channelId);
+      const validation = validateChannelName(name, latest, modal.channelId, t);
       if (validation) {
         form.setFieldError('name', validation);
         throw new Error(validation);
@@ -57,30 +59,30 @@ export default function ChannelModal({ modal, channels }) {
       close();
     } catch (reason) {
       if (reason.response?.status === 401) useAuthStore.getState().removeAuth();
-      setError('Не удалось выполнить операцию. Проверьте список каналов перед повторной попыткой.');
+      setError(t('channels.operationError'));
     } finally {
       busy.current = false;
     }
   };
-  const title = creating ? 'Добавить канал' : deleting ? 'Удалить канал' : 'Переименовать канал';
+  const title = creating ? t('channels.addTitle') : deleting ? t('channels.deleteTitle') : t('channels.renameTitle');
   return (
     <Modal opened onClose={() => { if (!mutation.isPending) close(); }} title={title} centered
       closeOnEscape={!mutation.isPending} closeOnClickOutside={!mutation.isPending}
-      withCloseButton={!mutation.isPending}>
+      withCloseButton={!mutation.isPending} closeButtonProps={{ 'aria-label': t('common.close') }}>
       <form onSubmit={(event) => form.onSubmit(submit)(event)}>
         <Stack>
-          {unavailable && <Alert color="red" role="alert">Канал удалён или недоступен для изменения.</Alert>}
+          {unavailable && <Alert color="red" role="alert">{t('channels.unavailableNotice')}</Alert>}
           {error && <Alert color="red" role="alert">{error}</Alert>}
-          {deleting ? <Text>Удалить канал «{channel?.name}» и все его сообщения?</Text> : (
-            <TextInput label="Имя канала" data-autofocus required
+          {deleting ? <Text>{t('channels.confirmDelete', { name: channel?.name })}</Text> : (
+            <TextInput label={t('channels.name')} data-autofocus required
               readOnly={mutation.isPending} {...form.getInputProps('name')}
               onFocus={(event) => event.currentTarget.select()} />
           )}
           <Group justify="flex-end">
-            <Button variant="default" onClick={close} disabled={mutation.isPending}>Отменить</Button>
+            <Button variant="default" onClick={close} disabled={mutation.isPending}>{t('common.cancel')}</Button>
             <Button type="submit" color={deleting ? 'red' : 'blue'} data-autofocus={deleting || undefined}
               loading={mutation.isPending} disabled={unavailable}>
-              {creating ? 'Добавить' : deleting ? 'Удалить' : 'Сохранить'}
+              {creating ? t('common.add') : deleting ? t('common.delete') : t('common.save')}
             </Button>
           </Group>
         </Stack>

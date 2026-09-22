@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ActionIcon, Alert, Button, Center, Menu, Group, Loader, Paper, ScrollArea, Stack, Text, Title } from '@mantine/core';
@@ -12,6 +13,7 @@ import { subscribeToChannels } from '../channelEvents';
 import ChannelModal from '../components/ChannelModal';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const socket = useContext(SocketContext);
   const client = useQueryClient();
   const [connected, setConnected] = useState(() => Boolean(socket?.connected));
@@ -51,17 +53,17 @@ export default function HomePage() {
 
   if ((channels.isError && !channels.data) || (messages.isError && !messages.data)) {
     return (
-      <Alert color="red" title="Не удалось загрузить чат" role="alert" m="md">
+      <Alert color="red" title={t('chat.loadError')} role="alert" m="md">
         <Stack gap="sm">
-          <Text>Проверьте подключение и попробуйте ещё раз.</Text>
-          <Button onClick={() => { void channels.refetch(); void messages.refetch(); }}>Повторить</Button>
+          <Text>{t('chat.retryNotice')}</Text>
+          <Button onClick={() => { void channels.refetch(); void messages.refetch(); }}>{t('common.retry')}</Button>
         </Stack>
       </Alert>
     );
   }
 
   if (channels.isPending || messages.isPending) {
-    return <Center mih="60vh"><Loader aria-label="Загрузка чата" /></Center>;
+    return <Center mih="60vh"><Loader aria-label={t('chat.loading')} /></Center>;
   }
 
   const visibleMessages = currentChannel
@@ -72,7 +74,7 @@ export default function HomePage() {
     <><Group align="stretch" gap="md" wrap="nowrap" p="md" h="calc(100dvh - 72px)">
       <Paper component="aside" withBorder p="sm" w={{ base: 130, sm: 240 }} flex="0 0 auto">
         <Stack h="100%">
-          <Group justify="space-between"><Title order={2} size="h4">Каналы</Title><ActionIcon aria-label="Добавить канал" onClick={() => openModal('create')}>+</ActionIcon></Group>
+          <Group justify="space-between"><Title order={2} size="h4">{t('channels.title')}</Title><ActionIcon aria-label={t('channels.addTitle')} onClick={() => openModal('create')}>+</ActionIcon></Group>
           <ScrollArea flex={1} type="auto" scrollbars="y">
             <Stack gap="xs">
               {channels.data.map((channel) => (
@@ -83,34 +85,34 @@ export default function HomePage() {
                   onClick={() => setCurrentChannel(channel.id)}
                   flex={1} miw={0} title={channel.name}
                 >
-                  <Text span truncate># {channel.name}</Text>
+                  <Text span truncate>{t('channels.label', { name: channel.name })}</Text>
                 </Button>
                 {channel.removable && <Menu withinPortal>
-                  <Menu.Target><ActionIcon variant="subtle" aria-label={`Управление каналом ${channel.name}`}>⋮</ActionIcon></Menu.Target>
+                  <Menu.Target><ActionIcon variant="subtle" aria-label={t('channels.manage', { name: channel.name })}>⋮</ActionIcon></Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item onClick={() => openModal('rename', channel.id)}>Переименовать</Menu.Item>
-                    <Menu.Item color="red" onClick={() => openModal('remove', channel.id)}>Удалить</Menu.Item>
+                    <Menu.Item onClick={() => openModal('rename', channel.id)}>{t('channels.rename')}</Menu.Item>
+                    <Menu.Item color="red" onClick={() => openModal('remove', channel.id)}>{t('common.delete')}</Menu.Item>
                   </Menu.Dropdown>
                 </Menu>}
                 </Group>
               ))}
-              {channels.data.length === 0 && <Text c="dimmed">Каналов пока нет</Text>}
+              {channels.data.length === 0 && <Text c="dimmed">{t('channels.empty')}</Text>}
             </Stack>
           </ScrollArea>
         </Stack>
       </Paper>
       <Stack flex={1} miw={0}>
-        <Title order={2} size="h4" lineClamp={1}>{currentChannel ? `# ${currentChannel.name}` : 'Нет выбранного канала'}</Title>
-        {!connected && <Alert color="yellow" role="status">Соединение потеряно. Ожидаем подключения для получения новых сообщений.</Alert>}
-        {messages.isError && <Alert color="red" role="alert">Не удалось обновить сообщения. <Button variant="subtle" onClick={() => { void messages.refetch(); }}>Повторить</Button></Alert>}
-        <ScrollArea flex={1} mih={0} scrollbars="y" viewportRef={viewport} aria-label="Сообщения">
+        <Title order={2} size="h4" lineClamp={1}>{currentChannel ? t('channels.label', { name: currentChannel.name }) : t('channels.notSelected')}</Title>
+        {!connected && <Alert color="yellow" role="status">{t('chat.disconnected')}</Alert>}
+        {messages.isError && <Alert color="red" role="alert">{t('messages.refreshError')} <Button variant="subtle" onClick={() => { void messages.refetch(); }}>{t('common.retry')}</Button></Alert>}
+        <ScrollArea flex={1} mih={0} scrollbars="y" viewportRef={viewport} aria-label={t('messages.title')}>
           <Stack gap="xs">
             {visibleMessages.map((message) => (
               <Text key={message.id} style={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                 <Text span fw={700}>{message.username}</Text>: {message.body}
               </Text>
             ))}
-            {visibleMessages.length === 0 && <Text c="dimmed">Сообщений пока нет</Text>}
+            {visibleMessages.length === 0 && <Text c="dimmed">{t('messages.empty')}</Text>}
           </Stack>
         </ScrollArea>
         <MessageForm key={token} channelId={currentChannel?.id} />

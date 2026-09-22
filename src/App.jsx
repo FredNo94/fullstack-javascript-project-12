@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Anchor, Box, Button, Group } from '@mantine/core';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -5,6 +6,7 @@ import useAuthStore, { selectIsAuthenticated } from './authStore';
 import useUiStore from './uiStore';
 
 function App() {
+  const { t } = useTranslation();
   const authenticated = useAuthStore(selectIsAuthenticated);
   const client = useQueryClient();
   const navigate = useNavigate();
@@ -18,9 +20,9 @@ function App() {
     <Box mih="100dvh">
       <Group component="header" h={72} px="xl" bg="white" justify="space-between">
           <Anchor component={Link} to="/" fw={700}>
-            Hexlet Chat
+            {t('app.name')}
           </Anchor>
-          {authenticated && <Button onClick={logout}>Выйти</Button>}
+          {authenticated && <Button onClick={logout}>{t('auth.logout')}</Button>}
       </Group>
       <Box component="main">
         <Outlet />

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
 import { Alert, Button, Group, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -7,6 +8,7 @@ import chatService from '../services/chatService';
 import { refreshMessages } from '../messageEvents';
 
 export default function MessageForm({ channelId }) {
+  const { t } = useTranslation();
   const token = useAuthStore((state) => state.token);
   const username = useAuthStore((state) => state.username);
   const client = useQueryClient();
@@ -14,7 +16,7 @@ export default function MessageForm({ channelId }) {
   const input = useRef(null);
   const form = useForm({
     initialValues: { body: '' },
-    validate: { body: (value) => (value.trim() ? null : 'Введите сообщение') },
+    validate: { body: (value) => (value.trim() ? null : t('validation.messageRequired')) },
   });
   const mutation = useMutation({
     mutationFn: (message) => chatService.sendMessage(token, message),
@@ -44,7 +46,7 @@ export default function MessageForm({ channelId }) {
       <Stack gap="xs">
         {mutation.isError && (
           <Alert color="red" role="alert">
-            Не удалось подтвердить отправку. Текст сохранён. Проверьте сообщения перед повторной отправкой.
+            {t('messages.sendError')}
           </Alert>
         )}
         <Group wrap="nowrap">
@@ -52,15 +54,15 @@ export default function MessageForm({ channelId }) {
             ref={input}
             flex={1}
             miw={0}
-            aria-label="Новое сообщение"
-            placeholder="Введите сообщение..."
+            aria-label={t('messages.new')}
+            placeholder={t('messages.placeholder')}
             readOnly={mutation.isPending}
             disabled={!channelId}
             autoComplete="off"
             {...form.getInputProps('body')}
           />
           <Button type="submit" loading={mutation.isPending} disabled={!channelId || !form.values.body.trim()}>
-            Отправить
+            {t('messages.send')}
           </Button>
         </Group>
       </Stack>

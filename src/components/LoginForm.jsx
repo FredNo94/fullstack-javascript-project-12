@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { Alert, Anchor, Button, Center, Image, Paper, PasswordInput, SimpleGrid, Stack, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import authService from '../services/authService';
 import avatarImg from '../assets/avatar.jpg';
 
 export default function LoginForm() {
+  const { t } = useTranslation();
   const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
   const [authError, setAuthError] = useState(null);
@@ -14,8 +16,8 @@ export default function LoginForm() {
   const form = useForm({
     initialValues: { username: '', password: '' },
     validate: {
-      username: (value) => (value.trim() ? null : 'Обязательное поле'),
-      password: (value) => (value ? null : 'Обязательное поле'),
+      username: (value) => (value.trim() ? null : t('validation.required')),
+      password: (value) => (value ? null : t('validation.required')),
     },
   });
 
@@ -28,11 +30,11 @@ export default function LoginForm() {
       navigate('/', { replace: true });
     } catch (error) {
       if (!error.response) {
-        setAuthError('Не удалось подключиться к серверу. Попробуйте ещё раз.');
+        setAuthError(t('auth.networkError'));
       } else if (error.response.status === 401) {
-        setAuthError('Неверные имя пользователя или пароль');
+        setAuthError(t('auth.invalidCredentials'));
       } else {
-        setAuthError('Ошибка сервера');
+        setAuthError(t('auth.serverError'));
       }
     } finally {
       setSubmitting(false);
@@ -47,25 +49,25 @@ export default function LoginForm() {
         </Center>
       <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
         <Stack>
-          <Title order={1} size="h2" ta="center">Войти</Title>
+          <Title order={1} size="h2" ta="center">{t('auth.login')}</Title>
           {authError && <Alert color="red" role="alert">{authError}</Alert>}
           <TextInput
-            label="Ваш ник"
+            label={t('auth.nickname')}
             name="username"
             autoComplete="username"
             required
             {...form.getInputProps('username')}
           />
           <PasswordInput
-            label="Пароль"
+            label={t('auth.password')}
             name="password"
             autoComplete="current-password"
-            visibilityToggleButtonProps={{ 'aria-label': 'Показать или скрыть пароль' }}
+            visibilityToggleButtonProps={{ 'aria-label': t('auth.togglePassword') }}
             required
             {...form.getInputProps('password')}
           />
-          <Button type="submit" loading={isSubmitting} fullWidth>Войти</Button>
-          <Anchor component={Link} to="/signup" ta="center">Регистрация</Anchor>
+          <Button type="submit" loading={isSubmitting} fullWidth>{t('auth.login')}</Button>
+          <Anchor component={Link} to="/signup" ta="center">{t('auth.signup')}</Anchor>
         </Stack>
       </form>
       </SimpleGrid>
