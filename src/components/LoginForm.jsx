@@ -6,10 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../authStore';
 import authService from '../services/authService';
 import avatarImg from '../assets/avatar.jpg';
-import { showNetworkError } from '../toasts';
+import { useToastStore, showNetworkError } from '../toasts';
 
 export default function LoginForm() {
   const { t } = useTranslation();
+  const toastStore = useToastStore();
   const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
   const [authError, setAuthError] = useState(null);
@@ -31,7 +32,7 @@ export default function LoginForm() {
       navigate('/', { replace: true });
     } catch (error) {
       if (!error.response) {
-        showNetworkError(t);
+        showNetworkError(t, toastStore);
         setAuthError(t('auth.networkError'));
       } else if (error.response.status === 401) {
         setAuthError(t('auth.invalidCredentials'));

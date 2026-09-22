@@ -1,4 +1,4 @@
-.PHONY: install build start dev lint
+.PHONY: install build start dev lint test
 
 install:
 	npm ci
@@ -14,3 +14,6 @@ dev:
 
 lint:
 	npm run lint
+
+test:
+	npm test

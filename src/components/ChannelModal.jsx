@@ -9,10 +9,12 @@ import chatService from '../services/chatService';
 import { validateChannelName } from '../channelValidation';
 import { refreshChannels } from '../channelEvents';
 import { refreshMessages } from '../messageEvents';
-import { showChannelSuccess } from '../toasts';
+import { useToastStore, showChannelSuccess } from '../toasts';
 
 export default function ChannelModal({ modal, channels }) {
   const { t } = useTranslation();
+  const toastStore = useToastStore();
+  const removeAuth = useAuthStore((state) => state.removeAuth);
   const token = useAuthStore((state) => state.token);
   const close = useUiStore((state) => state.closeModal);
   const selectChannel = useUiStore((state) => state.setCurrentChannel);
@@ -50,7 +52,7 @@ export default function ChannelModal({ modal, channels }) {
     setError(null);
     try {
       const result = await mutation.mutateAsync({ name: name.trim() });
-      showChannelSuccess(modal.type, t);
+      showChannelSuccess(modal.type, t, toastStore);
       await client.cancelQueries({ queryKey: ['channels', token], exact: true });
       client.setQueryData(['channels', token], (old = []) => deleting
         ? old.filter((item) => item.id !== result.id)
@@ -60,7 +62,7 @@ export default function ChannelModal({ modal, channels }) {
       if (deleting) void refreshMessages(client, token);
       close();
     } catch (reason) {
-      if (reason.response?.status === 401) useAuthStore.getState().removeAuth();
+      if (reason.response?.status === 401) removeAuth();
       setError(t('channels.operationError'));
     } finally {
       busy.current = false;

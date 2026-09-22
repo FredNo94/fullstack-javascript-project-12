@@ -1,9 +1,13 @@
+import { createAuthStore } from './authStore';
+import { createUiStore } from './uiStore';
+import StoresContext from './contexts/StoresContext';
+import SessionLifecycle from './components/SessionLifecycle';
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import createI18n from './i18n.js';
 import { MantineProvider } from '@mantine/core';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Notifications } from '@mantine/notifications';
+import { Notifications, createNotificationsStore } from '@mantine/notifications';
 import { isAxiosError } from 'axios';
 import { showRequestError, showNetworkError } from './toasts';
 import NetworkNotifications from './components/NetworkNotifications';
@@ -21,11 +25,12 @@ import SocketContext from './contexts/SocketContext.js';
 const init = async (socket) => {
   const i18n = await createI18n();
   document.title = i18n.t('app.name');
+  const stores = { auth: createAuthStore(), ui: createUiStore(), toasts: createNotificationsStore() };
   const queryClient = new QueryClient({
-    queryCache: new QueryCache({ onError: (error) => showRequestError(error, i18n.t.bind(i18n)) }),
+    queryCache: new QueryCache({ onError: (error) => showRequestError(error, i18n.t.bind(i18n), stores.toasts) }),
     mutationCache: new MutationCache({
       onError: (error) => {
-        if (isAxiosError(error) && !error.response) showNetworkError(i18n.t.bind(i18n));
+        if (isAxiosError(error) && !error.response) showNetworkError(i18n.t.bind(i18n), stores.toasts);
       },
     }),
   });
@@ -50,15 +55,18 @@ const init = async (socket) => {
   return (
     <React.StrictMode>
       <I18nextProvider i18n={i18n}>
+      <StoresContext.Provider value={stores}>
       <SocketContext.Provider value={socket}>
         <QueryClientProvider client={queryClient}>
           <MantineProvider forceColorScheme="light">
-            <Notifications position="top-right" limit={3} zIndex={1100} />
+            <SessionLifecycle />
+            <Notifications store={stores.toasts} position="top-right" limit={3} zIndex={1100} />
             <NetworkNotifications />
             <RouterProvider router={router} />
           </MantineProvider>
         </QueryClientProvider>
       </SocketContext.Provider>
+      </StoresContext.Provider>
       </I18nextProvider>
     </React.StrictMode>
   );

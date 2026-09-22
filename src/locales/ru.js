@@ -1,7 +1,7 @@
 export default {
   "translation": {
     "notifications": {
-      "networkError": "Ошибка соединения. Проверьте подключение к сети.",
+      "networkError": "Ошибка соединения",
       "loadError": "Не удалось загрузить данные. Попробуйте ещё раз.",
       "channel": {
         "create": "Канал создан",
@@ -51,7 +51,7 @@ export default {
       "empty": "Каналов пока нет",
       "notSelected": "Нет выбранного канала",
       "confirmDelete": "Удалить канал «{{name}}» и все его сообщения?",
-      "manage": "Управление каналом {{name}}",
+      "manage": "Управление каналом",
       "label": "# {{name}}"
     },
     "common": {

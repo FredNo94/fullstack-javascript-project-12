@@ -74,7 +74,7 @@ export default function HomePage() {
     <><Group align="stretch" gap="md" wrap="nowrap" p="md" h="calc(100dvh - 72px)">
       <Paper component="aside" withBorder p="sm" w={{ base: 130, sm: 240 }} flex="0 0 auto">
         <Stack h="100%">
-          <Group justify="space-between"><Title order={2} size="h4">{t('channels.title')}</Title><ActionIcon aria-label={t('channels.addTitle')} onClick={() => openModal('create')}>+</ActionIcon></Group>
+          <Group justify="space-between"><Title order={2} size="h4">{t('channels.title')}</Title><ActionIcon aria-label="+" title={t('channels.addTitle')} onClick={() => openModal('create')}>+</ActionIcon></Group>
           <ScrollArea flex={1} type="auto" scrollbars="y">
             <Stack gap="xs">
               {channels.data.map((channel) => (

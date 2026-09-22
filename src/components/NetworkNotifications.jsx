@@ -2,21 +2,22 @@ import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
 import SocketContext from '../contexts/SocketContext';
-import { showNetworkError } from '../toasts';
+import { useToastStore, showNetworkError } from '../toasts';
 
 export default function NetworkNotifications() {
   const socket = useContext(SocketContext);
   const { t } = useTranslation();
+  const toastStore = useToastStore();
   useEffect(() => {
     let reported = false;
     const offline = () => {
-      if (!reported) showNetworkError(t);
+      if (!reported) showNetworkError(t, toastStore);
       reported = true;
     };
     const recovered = () => {
       if (navigator.onLine && (!socket || socket.connected)) {
         reported = false;
-        notifications.hide('network-error');
+        notifications.hide('network-error', toastStore);
       }
     };
     window.addEventListener('offline', offline);
@@ -32,6 +33,6 @@ export default function NetworkNotifications() {
       socket?.off('connect_error', offline);
       socket?.off('connect', recovered);
     };
-  }, [socket, t]);
+  }, [socket, t, toastStore]);
   return null;
 }

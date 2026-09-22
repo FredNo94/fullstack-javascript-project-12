@@ -9,6 +9,7 @@ import { refreshMessages } from '../messageEvents';
 
 export default function MessageForm({ channelId }) {
   const { t } = useTranslation();
+  const removeAuth = useAuthStore((state) => state.removeAuth);
   const token = useAuthStore((state) => state.token);
   const username = useAuthStore((state) => state.username);
   const client = useQueryClient();
@@ -32,8 +33,8 @@ export default function MessageForm({ channelId }) {
       form.reset();
       void refreshMessages(client, token);
     } catch (error) {
-      if (error.response?.status === 401 && useAuthStore.getState().token === token) {
-        useAuthStore.getState().removeAuth();
+      if (error.response?.status === 401) {
+        removeAuth();
       }
     } finally {
       sending.current = false;

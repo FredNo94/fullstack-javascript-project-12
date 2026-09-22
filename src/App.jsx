@@ -7,13 +7,15 @@ import useUiStore from './uiStore';
 
 function App() {
   const { t } = useTranslation();
+  const removeAuth = useAuthStore((state) => state.removeAuth);
   const authenticated = useAuthStore(selectIsAuthenticated);
   const client = useQueryClient();
+  const resetUi = useUiStore((state) => state.reset);
   const navigate = useNavigate();
   const logout = () => {
-    useAuthStore.getState().removeAuth();
+    removeAuth();
     client.clear();
-    useUiStore.setState({ currentChannelId: null, modal: null });
+    resetUi();
     navigate('/login', { replace: true });
   };
   return (

@@ -6,10 +6,11 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import useAuthStore, { selectIsAuthenticated } from '../authStore';
 import authService from '../services/authService';
 import { signupValidation } from '../signupValidation';
-import { showNetworkError } from '../toasts';
+import { useToastStore, showNetworkError } from '../toasts';
 
 export default function SignupPage() {
   const { t } = useTranslation();
+  const toastStore = useToastStore();
   const authenticated = useAuthStore(selectIsAuthenticated);
   const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function SignupPage() {
       setAuth(auth);
       navigate('/', { replace: true });
     } catch (reason) {
-      if (!reason.response) showNetworkError(t);
+      if (!reason.response) showNetworkError(t, toastStore);
       if (reason.response?.status === 409) {
         form.setFieldError('username', t('auth.userExists'));
         form.getInputNode('username')?.focus();
