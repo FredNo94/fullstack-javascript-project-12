@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
-import { Alert, Button, Center, Image, Paper, PasswordInput, SimpleGrid, Stack, TextInput, Title } from '@mantine/core';
+import { Alert, Anchor, Button, Center, Image, Paper, PasswordInput, SimpleGrid, Stack, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../authStore';
 import authService from '../services/authService';
 import avatarImg from '../assets/avatar.jpg';
@@ -65,6 +65,7 @@ export default function LoginForm() {
             {...form.getInputProps('password')}
           />
           <Button type="submit" loading={isSubmitting} fullWidth>Войти</Button>
+          <Anchor component={Link} to="/signup" ta="center">Регистрация</Anchor>
         </Stack>
       </form>
       </SimpleGrid>

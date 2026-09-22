@@ -6,6 +6,7 @@ import '@mantine/core/styles.css';
 import App from './App.jsx';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import SocketContext from './contexts/SocketContext.js';
@@ -24,6 +25,7 @@ const init = async (socket) => {
           ],
         },
         { path: 'login', element: <LoginPage /> },
+        { path: 'signup', element: <SignupPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },

@@ -5,4 +5,9 @@ const login = async (values) => {
   return response.data;
 };
 
-export default { login };
+const signup = async ({ username, password }) => {
+  const response = await axios.post('/api/v1/signup', { username, password }, { timeout: 15000 });
+  return response.data;
+};
+
+export default { login, signup };
