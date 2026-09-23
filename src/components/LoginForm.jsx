@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { Alert, Anchor, Button, Center, Image, Paper, PasswordInput, SimpleGrid, Stack, TextInput, Title } from '@mantine/core';
+import { Alert, Anchor, Box, Button, Center, Divider, Image, Paper, PasswordInput, SimpleGrid, Stack, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../authStore';
@@ -45,8 +45,8 @@ export default function LoginForm() {
   };
 
   return (
-    <Paper withBorder shadow="sm" radius="md" p="xl" w="100%" maw={800}>
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xl">
+    <Paper withBorder shadow="sm" radius="md" w="100%" maw={800}>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xl" p="xl">
         <Center>
           <Image src={avatarImg} alt="" w={200} maw="100%" radius="50%" />
         </Center>
@@ -72,10 +72,16 @@ export default function LoginForm() {
             {...form.getInputProps('password')}
           />
           <Button type="submit" loading={isSubmitting} fullWidth>{t('auth.login')}</Button>
-          <Anchor component={Link} to="/signup" ta="center">{t('auth.signup')}</Anchor>
         </Stack>
       </form>
       </SimpleGrid>
+      <Divider />
+      <Box p="md">
+        <Text ta="center">
+          {t('auth.noAccount')}{' '}
+          <Anchor component={Link} to="/signup">{t('auth.signup')}</Anchor>
+        </Text>
+      </Box>
     </Paper>
   );
 }
