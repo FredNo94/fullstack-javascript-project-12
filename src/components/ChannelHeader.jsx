@@ -8,7 +8,7 @@ export default function ChannelHeader({ channel, messageCount }) {
     <Box component="header" flex="0 0 auto">
       <Stack p="md" gap={4}>
         <Title order={2} size="h4" lineClamp={1}>
-          {channel ? t('channels.label', { name: channel.name }) : t('channels.notSelected')}
+          {channel ? channel.name : t('channels.notSelected')}
         </Title>
         <Text size="sm" c="dimmed">{t('messages.count', { count: messageCount })}</Text>
       </Stack>
