@@ -18,9 +18,11 @@ export default function SignupPage() {
   const [error, setError] = useState(null);
   const busy = useRef(false);
   const form = useForm({
+    validateInputOnChange: true,
     initialValues: { username: '', password: '', confirmPassword: '' },
     validate: signupValidation(t),
   });
+  const passwordInputProps = form.getInputProps('password');
   const submit = async ({ username, password }) => {
     if (busy.current) return;
     busy.current = true;
@@ -43,11 +45,13 @@ export default function SignupPage() {
       setPending(false);
     }
   };
+
+  const handleSubmit = form.onSubmit(submit);
   if (authenticated) return <Navigate to="/" replace />;
   return (
     <Center p="md" mih="75vh">
       <Paper withBorder shadow="sm" radius="md" p="xl" w="100%" maw={440}>
-        <form onSubmit={(event) => form.onSubmit(submit)(event)} noValidate>
+        <form onSubmit={handleSubmit} noValidate>
           <Stack>
             <Title order={1} size="h2" ta="center">{t('auth.signup')}</Title>
             {error && <Alert color="red" role="alert">{error}</Alert>}
@@ -56,7 +60,15 @@ export default function SignupPage() {
               readOnly={pending} {...form.getInputProps('username')} />
             <PasswordInput label={t('auth.password')} name="password" autoComplete="new-password" required
               withAsterisk={false}
-              readOnly={pending} {...form.getInputProps('password')}
+              readOnly={pending} {...passwordInputProps}
+              onChange={(event) => {
+                const password = event.currentTarget.value;
+                passwordInputProps.onChange(event);
+                const values = { ...form.getValues(), password };
+                if (values.confirmPassword) {
+                  form.setFieldError('confirmPassword', signupValidation(t).confirmPassword(values.confirmPassword, values));
+                }
+              }}
               visibilityToggleButtonProps={{ 'aria-label': t('auth.togglePassword') }} />
             <PasswordInput label={t('auth.confirmPassword')} name="confirmPassword" autoComplete="new-password" required
               withAsterisk={false}

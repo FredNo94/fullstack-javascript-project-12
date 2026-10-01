@@ -1,21 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Anchor, Box, Button, Group, Paper } from '@mantine/core';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import useAuthStore, { selectIsAuthenticated } from './authStore';
-import useUiStore from './uiStore';
+import ModalHost from './components/ModalHost';
 
 function App() {
   const { t } = useTranslation();
   const removeAuth = useAuthStore((state) => state.removeAuth);
   const authenticated = useAuthStore(selectIsAuthenticated);
-  const client = useQueryClient();
-  const resetUi = useUiStore((state) => state.reset);
   const navigate = useNavigate();
   const logout = () => {
     removeAuth();
-    client.clear();
-    resetUi();
     navigate('/login', { replace: true });
   };
   return (
@@ -30,6 +25,7 @@ function App() {
       </Paper>
       <Box component="main">
         <Outlet />
+        <ModalHost />
       </Box>
     </Box>
   );

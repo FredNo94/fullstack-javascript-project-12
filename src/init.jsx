@@ -1,7 +1,7 @@
 import { createAuthStore } from './authStore';
 import { createUiStore } from './uiStore';
 import StoresContext from './contexts/StoresContext';
-import SessionLifecycle from './components/SessionLifecycle';
+import AppLifecycle from './components/AppLifecycle';
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import createI18n from './i18n.js';
@@ -10,7 +10,6 @@ import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@ta
 import { Notifications, createNotificationsStore } from '@mantine/notifications';
 import { isAxiosError } from 'axios';
 import { showRequestError, showNetworkError } from './toasts';
-import NetworkNotifications from './components/NetworkNotifications';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
@@ -20,7 +19,9 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import SocketContext from './contexts/SocketContext.js';
+import AppApiContext from './contexts/AppApiContext.js';
+import createRealtimeApi from './services/realtimeApi.js';
+import createAppApi from './services/appApi.js';
 
 const init = async (socket) => {
   const i18n = await createI18n();
@@ -33,6 +34,9 @@ const init = async (socket) => {
         if (isAxiosError(error) && !error.response) showNetworkError(i18n.t.bind(i18n), stores.toasts);
       },
     }),
+  });
+  const api = createAppApi({
+    realtime: createRealtimeApi(socket), stores, queryClient, t: i18n.t.bind(i18n),
   });
   const router = createBrowserRouter([
     {
@@ -56,16 +60,15 @@ const init = async (socket) => {
     <React.StrictMode>
       <I18nextProvider i18n={i18n}>
       <StoresContext.Provider value={stores}>
-      <SocketContext.Provider value={socket}>
+      <AppApiContext.Provider value={api}>
         <QueryClientProvider client={queryClient}>
           <MantineProvider forceColorScheme="light">
-            <SessionLifecycle />
+            <AppLifecycle />
             <Notifications store={stores.toasts} position="bottom-right" limit={3} zIndex={1100} />
-            <NetworkNotifications />
             <RouterProvider router={router} />
           </MantineProvider>
         </QueryClientProvider>
-      </SocketContext.Provider>
+      </AppApiContext.Provider>
       </StoresContext.Provider>
       </I18nextProvider>
     </React.StrictMode>

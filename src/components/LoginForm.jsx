@@ -16,6 +16,7 @@ export default function LoginForm() {
   const [authError, setAuthError] = useState(null);
   const [isSubmitting, setSubmitting] = useState(false);
   const form = useForm({
+    validateInputOnChange: true,
     initialValues: { username: '', password: '' },
     validate: {
       username: (value) => (value.trim() ? null : t('validation.required')),

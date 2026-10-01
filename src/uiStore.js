@@ -5,6 +5,8 @@ import StoresContext from './contexts/StoresContext.js';
 
 export const createUiStore = () => createStore((set) => ({
   currentChannelId: null,
+  connectionStatus: 'connecting',
+  setConnectionStatus: (connectionStatus) => set({ connectionStatus }),
   reset: () => set({ currentChannelId: null, modal: null }),
   modal: null,
   openModal: (type, channelId = null) => set({ modal: { type, channelId } }),

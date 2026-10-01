@@ -1,29 +1,22 @@
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ActionIcon, Alert, Button, Center, Menu, Group, Loader, Paper, ScrollArea, Stack, Text, Title } from '@mantine/core';
 import useAuthStore from '../authStore';
 import useUiStore from '../uiStore';
 import { channelsQuery, messagesQuery } from '../chatQueries';
 
-import SocketContext from '../contexts/SocketContext';
 import MessageForm from '../components/MessageForm';
-import { subscribeToMessages } from '../messageEvents';
-import { subscribeToChannels } from '../channelEvents';
-import ChannelModal from '../components/ChannelModal';
 import ChannelHeader from '../components/ChannelHeader';
 import MessageList from '../components/MessageList';
 
 export default function HomePage() {
   const { t } = useTranslation();
-  const socket = useContext(SocketContext);
-  const client = useQueryClient();
-  const [connected, setConnected] = useState(() => Boolean(socket?.connected));
+  const connectionStatus = useUiStore((state) => state.connectionStatus);
   const token = useAuthStore((state) => state.token);
   const removeAuth = useAuthStore((state) => state.removeAuth);
   const currentChannelId = useUiStore((state) => state.currentChannelId);
   const setCurrentChannel = useUiStore((state) => state.setCurrentChannel);
-  const modal = useUiStore((state) => state.modal);
   const openModal = useUiStore((state) => state.openModal);
   const channels = useQuery(channelsQuery(token));
   const messages = useQuery(messagesQuery(token));
@@ -40,13 +33,6 @@ export default function HomePage() {
       removeAuth();
     }
   }, [channels.error, messages.error, removeAuth]);
-
-  useEffect(() => {
-    if (!socket || !token) return undefined;
-    const stopMessages = subscribeToMessages(socket, client, token, setConnected);
-    const stopChannels = subscribeToChannels(socket, client, token);
-    return () => { stopMessages(); stopChannels(); };
-  }, [socket, client, token]);
 
   if ((channels.isError && !channels.data) || (messages.isError && !messages.data)) {
     return (
@@ -104,7 +90,7 @@ export default function HomePage() {
       <Stack h="100%" gap={0}>
         <ChannelHeader channel={currentChannel} messageCount={visibleMessages.length} />
         <Stack component="section" aria-label={t('messages.title')} flex={1} mih={0} p="md" gap="md">
-        {!connected && <Alert color="yellow" role="status">{t('chat.disconnected')}</Alert>}
+        {connectionStatus === 'disconnected' && <Alert color="yellow" role="status">{t('chat.disconnected')}</Alert>}
         {messages.isError && <Alert color="red" role="alert">{t('messages.refreshError')} <Button variant="subtle" onClick={() => { void messages.refetch(); }}>{t('common.retry')}</Button></Alert>}
         <MessageList messages={visibleMessages} channelId={currentChannel?.id} />
         <MessageForm key={token} channelId={currentChannel?.id} />
@@ -112,7 +98,6 @@ export default function HomePage() {
       </Stack>
       </Paper>
     </Group>
-    {modal && <ChannelModal key={`${modal.type}-${modal.channelId}`} modal={modal} channels={channels.data} />}
     </>
   );
 }

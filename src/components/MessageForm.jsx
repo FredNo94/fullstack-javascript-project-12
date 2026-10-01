@@ -16,6 +16,7 @@ export default function MessageForm({ channelId }) {
   const sending = useRef(false);
   const input = useRef(null);
   const form = useForm({
+    validateInputOnChange: true,
     initialValues: { body: '' },
     validate: { body: (value) => (value.trim() ? null : t('validation.messageRequired')) },
   });
@@ -42,8 +43,9 @@ export default function MessageForm({ channelId }) {
     }
   };
 
+  const handleSubmit = form.onSubmit(submit);
   return (
-    <form onSubmit={(event) => form.onSubmit(submit)(event)}>
+    <form onSubmit={handleSubmit}>
       <Stack gap="xs">
         {mutation.isError && (
           <Alert color="red" role="alert">

@@ -6,12 +6,22 @@ import { isAxiosError } from 'axios';
 export const useToastStore = () => useContext(StoresContext).toasts;
 
 export const showNetworkError = (t, store) => notifications.show({
-  id: 'network-error',
+  id: 'request-network-error',
   color: 'red',
   message: t('notifications.networkError'),
   autoClose: 7000,
   closeButtonProps: { 'aria-label': t('common.close') },
 }, store);
+
+export const showConnectionError = (t, store) => notifications.show({
+  id: 'connection-error',
+  color: 'red',
+  message: t('notifications.networkError'),
+  autoClose: false,
+  withCloseButton: false,
+}, store);
+
+export const hideConnectionError = (store) => notifications.hide('connection-error', store);
 
 export const showRequestError = (error, t, store) => {
   if (isAxiosError(error) && !error.response) {

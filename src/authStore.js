@@ -27,15 +27,6 @@ export const createAuthStore = () => {
     },
   ));
 
-  if (!localStorage.getItem('chat-auth') && hasToken(localStorage.getItem('token'))) {
-    store.getState().setAuth({
-      token: localStorage.getItem('token'),
-      username: localStorage.getItem('username'),
-    });
-  }
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-
   return store;
 };
 

@@ -26,6 +26,7 @@ export default function ChannelModal({ modal, channels }) {
   const busy = useRef(false);
   const [error, setError] = useState(null);
   const form = useForm({
+    validateInputOnChange: true,
     initialValues: { name: channel?.name ?? '' },
     validate: { name: (name) => deleting ? null : validateChannelName(name, channels, modal.channelId, t) },
   });
@@ -68,12 +69,14 @@ export default function ChannelModal({ modal, channels }) {
       busy.current = false;
     }
   };
+
+  const handleSubmit = form.onSubmit(submit);
   const title = creating ? t('channels.addTitle') : deleting ? t('channels.deleteTitle') : t('channels.renameTitle');
   return (
     <Modal opened onClose={() => { if (!mutation.isPending) close(); }} title={title} centered
       closeOnEscape={!mutation.isPending} closeOnClickOutside={!mutation.isPending}
       withCloseButton={!mutation.isPending} closeButtonProps={{ 'aria-label': t('common.close') }}>
-      <form onSubmit={(event) => form.onSubmit(submit)(event)}>
+      <form onSubmit={handleSubmit}>
         <Stack>
           {unavailable && <Alert color="red" role="alert">{t('channels.unavailableNotice')}</Alert>}
           {error && <Alert color="red" role="alert">{error}</Alert>}
