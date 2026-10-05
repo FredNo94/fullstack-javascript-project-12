@@ -22,6 +22,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AppApiContext from './contexts/AppApiContext.js';
 import createRealtimeApi from './services/realtimeApi.js';
 import createAppApi from './services/appApi.js';
+import { appRoutes } from './routes.js';
 
 const init = async (socket) => {
   const i18n = await createI18n();
@@ -40,7 +41,7 @@ const init = async (socket) => {
   });
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: appRoutes.home,
       element: <App />,
       children: [
         {
@@ -49,9 +50,9 @@ const init = async (socket) => {
             { index: true, element: <HomePage /> },
           ],
         },
-        { path: 'login', element: <LoginPage /> },
-        { path: 'signup', element: <SignupPage /> },
-        { path: '*', element: <NotFoundPage /> },
+        { path: appRoutes.login, element: <LoginPage /> },
+        { path: appRoutes.signup, element: <SignupPage /> },
+        { path: appRoutes.notFound, element: <NotFoundPage /> },
       ],
     },
   ]);

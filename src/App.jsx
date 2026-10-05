@@ -3,6 +3,7 @@ import { Anchor, Box, Button, Group, Paper } from '@mantine/core';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import useAuthStore, { selectIsAuthenticated } from './authStore';
 import ModalHost from './components/ModalHost';
+import { appRoutes } from './routes.js';
 
 function App() {
   const { t } = useTranslation();
@@ -11,13 +12,13 @@ function App() {
   const navigate = useNavigate();
   const logout = () => {
     removeAuth();
-    navigate('/login', { replace: true });
+    navigate(appRoutes.login, { replace: true });
   };
   return (
     <Box mih="100dvh">
       <Paper component="header" withBorder radius={0} bg="white">
         <Group h={70} pl="calc(var(--mantine-spacing-md) + var(--mantine-spacing-sm))" pr="md" justify="space-between" wrap="nowrap">
-          <Anchor component={Link} to="/" fw={700} c="black" underline="never">
+          <Anchor component={Link} to={appRoutes.home} fw={700} c="black" underline="never">
             {t('app.name')}
           </Anchor>
           {authenticated && <Button variant="outline" color="blue" onClick={logout}>{t('auth.logout')}</Button>}

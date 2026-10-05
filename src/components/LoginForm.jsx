@@ -7,6 +7,7 @@ import useAuthStore from '../authStore';
 import authService from '../services/authService';
 import avatarImg from '../assets/avatar.jpg';
 import { useToastStore, showNetworkError } from '../toasts';
+import { appRoutes } from '../routes.js';
 
 export default function LoginForm() {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export default function LoginForm() {
     try {
       const { token, username } = await authService.login(values);
       setAuth({ token, username });
-      navigate('/', { replace: true });
+      navigate(appRoutes.home, { replace: true });
     } catch (error) {
       if (!error.response) {
         showNetworkError(t, toastStore);
@@ -80,7 +81,7 @@ export default function LoginForm() {
       <Box p="md">
         <Text ta="center">
           {t('auth.noAccount')}{' '}
-          <Anchor component={Link} to="/signup">{t('auth.signup')}</Anchor>
+          <Anchor component={Link} to={appRoutes.signup}>{t('auth.signup')}</Anchor>
         </Text>
       </Box>
     </Paper>

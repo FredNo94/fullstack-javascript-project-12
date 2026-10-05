@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { cleanText, cleanChannelName } from '../profanity.js';
+import { apiRoutes } from '../routes.js';
 
 const getChannels = async (token, signal) => {
-  const response = await axios.get('/api/v1/channels', {
+  const response = await axios.get(apiRoutes.channels, {
     timeout: 15000,
     signal,
     headers: {
@@ -13,7 +14,7 @@ const getChannels = async (token, signal) => {
 };
 
 const getMessages = async (token, signal) => {
-  const response = await axios.get('/api/v1/messages', {
+  const response = await axios.get(apiRoutes.messages, {
     timeout: 15000,
     signal,
     headers: {
@@ -24,7 +25,7 @@ const getMessages = async (token, signal) => {
 };
 
 const sendMessage = async (token, message) => {
-  const response = await axios.post('/api/v1/messages', { ...message, body: cleanText(message.body) }, {
+  const response = await axios.post(apiRoutes.messages, { ...message, body: cleanText(message.body) }, {
     timeout: 15000,
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -34,7 +35,7 @@ const sendMessage = async (token, message) => {
 const changeChannel = async (token, method, id, name) => {
   const response = await axios({
     method,
-    url: id == null ? '/api/v1/channels' : `/api/v1/channels/${encodeURIComponent(id)}`,
+    url: id == null ? apiRoutes.channels : apiRoutes.channel(id),
     data: name === undefined ? undefined : { name: cleanChannelName(name) },
     timeout: 15000,
     headers: { Authorization: `Bearer ${token}` },

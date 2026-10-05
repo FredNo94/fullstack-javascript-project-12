@@ -7,6 +7,7 @@ import useAuthStore, { selectIsAuthenticated } from '../authStore';
 import authService from '../services/authService';
 import { signupValidation } from '../signupValidation';
 import { useToastStore, showNetworkError } from '../toasts';
+import { appRoutes } from '../routes.js';
 
 export default function SignupPage() {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export default function SignupPage() {
     try {
       const auth = await authService.signup({ username: username.trim(), password });
       setAuth(auth);
-      navigate('/', { replace: true });
+      navigate(appRoutes.home, { replace: true });
     } catch (reason) {
       if (!reason.response) showNetworkError(t, toastStore);
       if (reason.response?.status === 409) {
@@ -47,7 +48,7 @@ export default function SignupPage() {
   };
 
   const handleSubmit = form.onSubmit(submit);
-  if (authenticated) return <Navigate to="/" replace />;
+  if (authenticated) return <Navigate to={appRoutes.home} replace />;
   return (
     <Center p="md" mih="75vh">
       <Paper withBorder shadow="sm" radius="md" p="xl" w="100%" maw={440}>
@@ -75,7 +76,7 @@ export default function SignupPage() {
               readOnly={pending} {...form.getInputProps('confirmPassword')}
               visibilityToggleButtonProps={{ 'aria-label': t('auth.toggleConfirmPassword') }} />
             <Button type="submit" loading={pending}>{t('auth.register')}</Button>
-            <Anchor component={Link} to="/login" ta="center">{t('auth.haveAccount')}</Anchor>
+            <Anchor component={Link} to={appRoutes.login} ta="center">{t('auth.haveAccount')}</Anchor>
           </Stack>
         </form>
       </Paper>

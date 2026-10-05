@@ -7,6 +7,7 @@ import useAuthStore from '../authStore';
 import useUiStore from '../uiStore';
 import { channelsQuery } from '../chatQueries';
 import ChannelModal from './ChannelModal';
+import { appRoutes } from '../routes.js';
 
 function ChannelModalLoader({ modal, token }) {
   const { t } = useTranslation();
@@ -45,10 +46,10 @@ export default function ModalHost() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!token || pathname !== '/') close();
+    if (!token || pathname !== appRoutes.home) close();
   }, [token, pathname, close]);
 
-  if (!token || !modal || pathname !== '/') return null;
+  if (!token || !modal || pathname !== appRoutes.home) return null;
   return <ChannelModalLoader key={`${modal.type}-${modal.channelId}`} modal={modal} token={token} />;
 }
 
